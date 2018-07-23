@@ -27,10 +27,10 @@ FIREFOX=$(command -v firefox || echo -n "/dev/null")
         "$COVERAGE_DIR" \
         "$BINARY_PATH" || exit 1
 
-    if [[ -x "$CHROME" ]] && pgrep -x $(basename "$CHROME") > /dev/null; then
+    if [[ -x "$CHROME" ]] && pgrep -x "$(basename "$CHROME")" > /dev/null; then
         echo "Opening coverage report in Chrome."
         "$CHROME" "$COVERAGE_REPORT" chrome://newtab/
-    elif [[ -x "$FIREFOX" ]] && pgrep -x $(basename "$FIREFOX") > /dev/null; then
+    elif [[ -x "$FIREFOX" ]] && pgrep -x "$(basename "$FIREFOX")" > /dev/null; then
         echo "Opening coverage report in Firefox."
         "$FIREFOX" -new-tab -url "$COVERAGE_REPORT"
     else
