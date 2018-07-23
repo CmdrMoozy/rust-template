@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-for COMMAND in cargo grep kcov pgrep sed; do
+for COMMAND in kcov pgrep; do
     if ! command -v "$COMMAND" > /dev/null; then
         echo "Required command '$COMMAND' not found"
         exit 1
