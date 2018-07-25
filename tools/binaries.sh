@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 
-for COMMAND in cargo cut grep jq; do
+for COMMAND in cargo cut grep jq readlink; do
     if ! command -v "$COMMAND" > /dev/null; then
         echo "Required command '$COMMAND' not found"
         exit 1
     fi
 done
-
-BASE_DIR="$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )")"
-cd "$BASE_DIR" || exit 1
 
 TYPE="$1"
 if [[ "$TYPE" != "test" && "$TYPE" != "bench" ]]; then
@@ -16,6 +13,17 @@ if [[ "$TYPE" != "test" && "$TYPE" != "bench" ]]; then
     exit 1
 fi
 
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+PROJECT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
+while [[ ! -f "$PROJECT_DIR/Cargo.toml" ]]; do
+    if [[ "$PROJECT_DIR" == "/" ]]; then
+        echo "Failed to locate project's Cargo.toml."
+        exit 1
+    fi
+    PROJECT_DIR="$(dirname "$PROJECT_DIR")"
+done
+
+cd "$PROJECT_DIR" || exit 1
 cargo "$TYPE" --no-run --message-format=json 2>/dev/null | \
         jq -r "select(.profile.test == true) | .filenames[]" | \
         while read -r BINARY_PATH ; do
