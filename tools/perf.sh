@@ -8,7 +8,7 @@ for COMMAND in flamegraph grep perf pgrep readlink stackcollapse-perf; do
 done
 
 >&2 echo "This tool requires the following in Cargo.toml:"
->&2 echo "[profile.release]"
+>&2 echo "[profile.bench]"
 >&2 echo "debug = true"
 >&2 echo "lto = false"
 
