@@ -30,6 +30,14 @@ cargo "$TYPE" --no-run --message-format=json 2>/dev/null | \
     TEST_COUNT=$("$BINARY_PATH" --list | grep -P '^\d+ tests, \d+ benchmarks$' | cut -d ' ' -f 1)
     BENCH_COUNT=$("$BINARY_PATH" --list | grep -P '^\d+ tests, \d+ benchmarks$' | cut -d ' ' -f 3)
 
+    if [[ "$TYPE" == "bench"  && "$BENCH_COUNT" == "" ]]; then
+        # Running benchmarks on stable Rust happens with the bencher crate, but this
+        # crate doesn't support the --list option, so $BENCH_COUNT would just be the
+        # empty string. Detect this case, and replace it with a 1, to include this
+        # binary as a fallback.
+        BENCH_COUNT=1
+    fi
+
     # Skip binaries which have 0 tests | benchmarks (depending on $TYPE).
     if [[ "$TYPE" == "test" && "$TEST_COUNT" -lt 1 ]]; then
         continue
