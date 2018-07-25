@@ -36,6 +36,7 @@ FIREFOX=$(command -v firefox || echo -n "/dev/null")
     perf record \
         -g \
         -o "$PERF_RECORDING" \
+        --call-graph=dwarf \
         "$BINARY_PATH" --bench "$@"
 
     perf script \
