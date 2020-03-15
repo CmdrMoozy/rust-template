@@ -9,7 +9,9 @@ import os
 import subprocess
 import sys
 
-_DIRECTORY = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+_DIRECTORY = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+print('Testing crate in: "{}"'.format(_DIRECTORY))
 
 result = subprocess.run(['bash', '-c', 'cargo read-manifest | jq -r ".features | keys | .[]" | grep -v "^default$"'], cwd=_DIRECTORY, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
 if result.returncode != 0:
